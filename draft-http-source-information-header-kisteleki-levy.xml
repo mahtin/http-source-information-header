@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+ <!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
+ <!ENTITY RFC3552 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3552.xml">
+]>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<?rfc strict="yes" ?>
+<?rfc toc="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes" ?>
+<?rfc compact="yes" ?>
+<?rfc subcompact="no" ?>
+<rfc category="std" docName="draft-http-source-information-header-kisteleki-levy-01" ipr="trust200902">
+ <front>
+   <title abbrev="HTTP Server-ID">HTTP Server-ID header for determining specific anycast instance</title>
+
+   <author fullname="Robert Kisteleki" initials="R." surname="Kisteleki">
+     <organization>RIPE NCC</organization>
+     <address>
+       <postal>
+         <street>Singel 258</street>
+         <city>Amsterdam</city>
+         <region></region>
+         <code>1016 AB</code>
+         <country>NL</country>
+       </postal>
+       <phone>+33 20 535 44 44</phone>
+       <email>robert@ripe.net</email>
+     </address>
+   </author>
+   <author fullname="Martin J. Levy" initials="M.J." surname="Levy">
+     <organization>CloudFlare, Inc.</organization>
+     <address>
+       <postal>
+         <street>101 Townsend Street</street>
+         <city>San Francisco</city>
+         <region>California</region>
+         <code>94107</code>
+         <country>US</country>
+       </postal>
+       <phone>+1 650 319 8939</phone>
+       <email>martin@cloudflare.com</email>
+     </address>
+   </author>
+
+   <date year="2016" />
+
+   <area>General</area>
+
+   <workgroup>Internet Engineering Task Force</workgroup>
+
+   <keyword>HTTP Header</keyword>
+
+   <abstract>
+     <t>
+This document proposes a new HTTP header field, similar to NSID for DNS
+queries, to add an optional identifier to the HTTP server generating the
+response to a request. Such a header could be used to identifier which
+location or server instance was reached by the user, which can be useful in
+anycast deployments and CDNs.
+     </t>
+   </abstract>
+ </front>
+
+ <middle>
+
+   <section title="Introduction">
+
+     <t>
+We propose to add an OPTIONAL HTTP header, X-Server-ID. The value of such a
+filed is determined by the server operator; this document does not specify
+syntactical or semantic constraints.
+     </t>
+
+     <t>
+The specific use-case would be to specify the identity of the server and maybe
+it's geographic location.
+     </t>
+
+     <t>
+While it's not normally important to know where HTTP data is being delivered
+from; it can be a useful debugging tool to have that information kept in the HTTPheader.
+Normally, lower level protocols can be used (traceroute, ping, etc.) to determine the
+source end point location. With this header, the data would be there by default wihin
+every transaction.
+     </t>
+
+     <t>
+Front-end load-balancers can also mask the specific server delivering data. This
+is sometimes the desired operational mode. In some cases, for debugging reasons, it's
+useful to know the actual source server.
+     </t>
+
+     <t>
+The source IP address within an HTTP transaction normally can be mapped to a
+geographic location when Unicast addressesing is used. Anycast services change that
+dynamic.
+     </t>
+
+     <t>
+As more and more web services are delivered from Anycast servers; it becomes
+harder to know which physical location information is being delivered from.
+     </t>
+
+     <section title="Requirements Language">
+       <t>
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
+"SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
+interpreted as described in <xref target="RFC2119">RFC 2119</xref>.
+       </t>
+     </section>
+
+    </section>
+
+    <section title="The Header blah blah">
+     <t>
+We propose to add an OPTIONAL HTTP header, X-Server-ID. The value of such a
+filed is determined by the server operator; this document SHALL NOT specify
+syntactical or semantic constraints. However, operators SHOULD use values
+that can help clients to interpret the value itself, such as geolocation
+codes (UNLOC, <xref target="IATA">IATA codes</xref>, POP identifiers, etc.)
+in combination with some kind of server instances identifiers.
+
+The length of the value for this header cannot be more than 4 kilobytes (?)
+
+*To be checked: can multiple instances of the same header appear? If yes,
+say so. If not, then make the value a pussible list, with ";" as separator.
+     </t>
+   </section>
+
+   <section title="Examples">
+     <t>
+The X-Server-ID header contents can be as simple as the <xref target="IATA">IATA
+code</xref> for the airport closest to the servers location. IATA codes are commonly
+used within the Internet for names of sites and links.
+     </t>
+
+      <figure align="center" anchor="header-example-1">
+        <artwork align="left"><![CDATA[
++-----------------------+
+| X-Server-ID: JFK      |
++-----------------------+ ]]></artwork>
+        <postamble>An X-Server-ID header showing the local airport code.</postamble>
+      </figure>
+
+     <t>
+More complex examples could include specific server information along with
+location.
+     </t>
+
+      <figure align="center" anchor="header-example-2">
+        <artwork align="left"><![CDATA[
++---------------------------------------+
+| X-Server-ID: 2334677359553192-SIN     |
++---------------------------------------+ ]]></artwork>
+        <postamble>An X-Server-ID header showing company specific informaiton along with locations.</postamble>
+      </figure>
+
+     <t>
+The X-Server-ID header data SHOULD try not to duplicate the work of existing headers.
+For example; not replicating the X-Powered-By or Server header informaiton.
+     </t>
+
+   </section>
+
+    <section title="Recursion">
+     <t>
+There needs to be a way to address recursion when HTTP headers and content
+pass thru proxies or caches. As HTTP header names MUST be unique and only
+occure once, any additional server wanting to add content to the X-Server-ID
+header MUST do so in an additive manner.
+     </t>
+
+      <figure align="center" anchor="header-before-recursion">
+        <artwork align="left"><![CDATA[
++-----------------------+
+| X-Server-ID: JFK      |
++-----------------------+ ]]></artwork>
+        <postamble>An X-Server-ID header before a proxy or cache.</postamble>
+      </figure>
+
+      <figure align="center" anchor="header-after-recursion">
+        <artwork align="left"><![CDATA[
++-----------------------+
+| X-Server-ID: JFK,EWR  |
++-----------------------+ ]]></artwork>
+        <postamble>An X-Server-ID header after a proxy or cache.</postamble>
+      </figure>
+
+     <t>
+As this document SHALL NOT specify syntactical or semantic constraints of the
+headers value, the choice of comma is up to the implementer.
+     </t>
+
+   </section>
+
+    <section title="The Via Header">
+     <t>
+The <xref target="Via-Header">Via Header</xref> was introduced to detect loops
+when proxies or caches are used within the HTTP path. The proposed X-Server-ID
+header works independently from that header and doesn't change it's usefullness
+or functionality.
+     </t>
+   </section>
+
+   <section anchor="Acknowledgements" title="Acknowledgements">
+     <t>
+This work was propted by the work of the <xref target="Atlas">RIPE Atlas</xref>
+project and it's need to indentify HTTP servers when they are Anycast.
+In addition, this work is based on the existing CF- HTTP header used within
+<xref target="CloudFlare">CloudFlare's Anycast CDN deployment</xref>.
+     </t>
+
+     <t>
+This document is in-part a generalization and specification  of already existing
+company-specific solutions.
+     </t>
+   </section>
+
+   <section anchor="IANA" title="IANA Considerations">
+     <t>This memo includes no request to IANA.</t>
+   </section>
+
+   <section anchor="Security" title="Security Considerations">
+     <t>
+This header, by its very nature, exposes the existence of web servers or
+co-location sites or both. Server operators who are concerned abot this
+exposure should not opt in to this feature.
+
+NOTE: technically speaking, the "Server" header could be abused. As of now,
+this should say "Apache 2.2.x" or such, but it could say "Apache 2.2.x @
+LAX-2" as well. I'm arguing that this would be an overload, though it's a
+simple one to tweak...
+     </t>
+   </section>
+
+ </middle>
+
+ <back>
+   <references title="Normative References">
+     <!--?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml"?-->
+     &RFC2119;
+
+     <reference anchor="IATA" target="https://en.wikipedia.org/wiki/List_of_airports_by_IATA_code">
+       <front>
+         <title>List of airports by IATA code/</title>
+         <author>
+           <organization>Wikipedia</organization>
+         </author>
+         <date year="2016" />
+       </front>
+     </reference>
+
+     <reference anchor="Via-Header" target="https://blog.cloudflare.com/preventing-malicious-request-loops/">
+       <front>
+         <title>Preventing Malicious Request Loops/</title>
+         <author fullname="Nick Sullivan" initials="N.S." surname="Sullivan">
+           <organization>CloudFlare</organization>
+         </author>
+         <date year="2016" />
+       </front>
+     </reference>
+
+   </references>
+
+   <references title="Informative References">
+     &RFC3552;
+
+     <reference anchor="Atlas" target="https://atlas.ripe.net/">
+       <front>
+         <title>RIPE Atlas project</title>
+         <author>
+           <organization>RIPE NCC</organization>
+         </author>
+         <date year="2016" />
+       </front>
+     </reference>
+
+     <reference anchor="CloudFlare" target="https://cloudflare.com/">
+       <front>
+         <title>CloudFlare, Inc.</title>
+         <author>
+           <organization>CloudFlare, Inc.</organization>
+         </author>
+         <date year="2016" />
+       </front>
+     </reference>
+
+   </references>
+
+   <section anchor="app-additional" title="Additional Stuff">
+     <t>This becomes an Appendix.</t>
+   </section>
+
+   <!-- Change Log
+v00 2016-02-07  RK    Initial text
+v01 2016-02-14  MJL   Initial xml draft version
+    -->
+
+ </back>
+</rfc>
