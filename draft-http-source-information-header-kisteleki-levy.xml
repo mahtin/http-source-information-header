@@ -120,8 +120,9 @@ We propose to add an OPTIONAL HTTP header, Server-ID. The server operator
 determines the value of such a field; this document does not specify
 syntactical or semantic constraints. However, operators SHOULD use values
 that can help clients to interpret the value itself, such as geolocation
-codes (UNLOC, <xref target="IATA">IATA codes</xref>, POP identifiers, etc.)
-in combination with some kind of server instance identifiers.
+codes (<xref target="UNLOC">UNLOC</xref>, <xref target="IATA">IATA codes</xref>,
+POP identifiers, server-specific instance opaque tag, etc.) or some combination
+of these.
 
 We aren't proposing an X-Server-ID header because X- headers are now unused
 according to <xref target="RFC6648">RFC6648</xref>.
@@ -302,6 +303,16 @@ exposure should not opt in to this feature.
        <seriesInfo name="RFC" value="3864"/>
      </reference>
 
+     <reference anchor="UNLOC" target="http://www.unece.org/cefact/locode/welcome.html">
+       <front>
+         <title>United Nations Code for Trade and Transport Locations (UN/LOCODE)</title>
+         <author>
+           <organization>United Nations Economic Commission for Europe (UNECE)</organization>
+         </author>
+         <date year="2016" />
+       </front>
+     </reference>
+
      <reference anchor="IATA" target="https://en.wikipedia.org/wiki/List_of_airports_by_IATA_code">
        <front>
          <title>List of airports by IATA code/</title>
@@ -314,7 +325,7 @@ exposure should not opt in to this feature.
 
      <reference anchor="Via-Header" target="https://blog.cloudflare.com/preventing-malicious-request-loops/">
        <front>
-         <title>Preventing Malicious Request Loops/</title>
+         <title>Preventing Malicious Request Loops</title>
          <author fullname="Nick Sullivan" initials="N.S." surname="Sullivan">
            <organization>CloudFlare</organization>
          </author>
