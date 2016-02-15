@@ -54,11 +54,10 @@
 
    <abstract>
      <t>
-This document proposes a new HTTP header field, similar to NSID for DNS
-queries, to add an optional identifier to the HTTP server generating the
-response to a request. Such a header could be used to identifier which
-location or server instance was reached by the user, which can be useful in
-anycast deployments and CDNs.
+This document proposes a new HTTP header field to add an optional identifier
+of the HTTP server generating the response to a user request. Such a header
+could be used to identifier which location or server instance was reached by
+the user, which can be useful in anycast deployments and CDNs.
      </t>
    </abstract>
  </front>
@@ -68,22 +67,20 @@ anycast deployments and CDNs.
    <section title="Introduction">
 
      <t>
-We propose to add an OPTIONAL HTTP header, X-Server-ID. The value of such a
-filed is determined by the server operator; this document does not specify
-syntactical or semantic constraints.
-     </t>
-
-     <t>
-The specific use-case would be to specify the identity of the server and maybe
-it's geographic location.
+We propose to add an OPTIONAL HTTP header, Server-ID. The value of such a
+filed can be used to identify which location or server instance was reached by
+the user, which can be useful in anycast deployments and CDNs. The exact 
+syntax for the value if this field is determined by the server operator;
+this document does not specify syntactical or semantic constraints.
      </t>
 
      <t>
 While it's not normally important to know where HTTP data is being delivered
-from; it can be a useful debugging tool to have that information kept in the HTTPheader.
+from; it can be a useful debugging tool to have that information kept in the HTTP header.
 Normally, lower level protocols can be used (traceroute, ping, etc.) to determine the
-source end point location. With this header, the data would be there by default wihin
-every transaction.
+source end point location. For example, DNS servers can use NSID bit
+<xref target="RFC5001"/> to convey this information.
+With this header, the data could be there by default wihin every HTTP transaction.
      </t>
 
      <t>
@@ -113,25 +110,21 @@ interpreted as described in <xref target="RFC2119">RFC 2119</xref>.
 
     </section>
 
-    <section title="The X-Server-ID Header" anchor="x-server-id">
+    <section title="The Server-ID Header" anchor="server-id">
      <t>
-We propose to add an OPTIONAL HTTP header, X-Server-ID. The value of such a
-filed is determined by the server operator; this document SHALL NOT specify
+We propose to add an OPTIONAL HTTP header, Server-ID. The value of such a
+filed is determined by the server operator; this document does not specify
 syntactical or semantic constraints. However, operators SHOULD use values
 that can help clients to interpret the value itself, such as geolocation
 codes (UNLOC, <xref target="IATA">IATA codes</xref>, POP identifiers, etc.)
-in combination with some kind of server instances identifiers.
+in combination with some kind of server instance identifiers.</t>
 
-The length of the value for this header cannot be more than 4 kilobytes (?)
-
-*To be checked: can multiple instances of the same header appear? If yes,
-say so. If not, then make the value a pussible list, with ";" as separator.
-     </t>
+<t>The length of the value for this header cannot be more than 4 kilobytes (?)</t>
    </section>
 
    <section title="Examples">
      <t>
-The X-Server-ID header contents can be as simple as the <xref target="IATA">IATA
+The Server-ID header contents can be as simple as the <xref target="IATA">IATA
 code</xref> for the airport closest to the servers location. IATA codes are commonly
 used within the Internet for names of sites and links.
      </t>
@@ -139,9 +132,9 @@ used within the Internet for names of sites and links.
       <figure align="center" anchor="header-example-1">
         <artwork align="left"><![CDATA[
 +-----------------------+
-| X-Server-ID: JFK      |
+| Server-ID: JFK        |
 +-----------------------+ ]]></artwork>
-        <postamble>An X-Server-ID header showing the local airport code.</postamble>
+        <postamble>An Server-ID header showing the local airport code.</postamble>
       </figure>
 
      <t>
@@ -152,14 +145,14 @@ location.
       <figure align="center" anchor="header-example-2">
         <artwork align="left"><![CDATA[
 +---------------------------------------+
-| X-Server-ID: 2334677359553192-SIN     |
+| Server-ID: 2334677359553192-SIN       |
 +---------------------------------------+ ]]></artwork>
-        <postamble>An X-Server-ID header showing company specific informaiton along with locations.</postamble>
+        <postamble>An Server-ID header showing company specific informaiton along with locations.</postamble>
       </figure>
 
      <t>
-The X-Server-ID header data SHOULD try not to duplicate the work of existing headers.
-For example; not replicating the X-Powered-By or Server header informaiton.
+The Server-ID header data SHOULD try not to duplicate the work of existing headers.
+For example; not replicating the Powered-By or Server header informaiton.
      </t>
 
    </section>
@@ -168,30 +161,30 @@ For example; not replicating the X-Powered-By or Server header informaiton.
      <t>
 There needs to be a way to address recursion when HTTP headers and content
 pass thru proxies or caches. As HTTP header names MUST be unique and only
-occure once, any additional server wanting to add content to the X-Server-ID
+occure once, any additional server wanting to add content to the Server-ID
 header MUST do so in an additive manner.
      </t>
 
       <figure align="center" anchor="header-before-recursion">
         <artwork align="left"><![CDATA[
 +-----------------------+
-| X-Server-ID: JFK      |
+| Server-ID: JFK        |
 +-----------------------+ ]]></artwork>
-        <postamble>An X-Server-ID header before a proxy or cache.</postamble>
+        <postamble>An Server-ID header before a proxy or cache.</postamble>
       </figure>
 
       <figure align="center" anchor="header-after-recursion">
         <artwork align="left"><![CDATA[
 +-----------------------+
-| X-Server-ID: JFK,EWR  |
+| Server-ID: JFK;EWR    |
 +-----------------------+ ]]></artwork>
-        <postamble>An X-Server-ID header after a proxy or cache.</postamble>
+        <postamble>An Server-ID header after a proxy or cache.</postamble>
       </figure>
 
      <t>
-As this document SHALL NOT specify syntactical or semantic constraints of the
-headers value; however, when more than one element be placed on an X-Server-ID
-header, then they should be a comma-delimited list of elements.
+This document does not specify syntactical or semantic constraints of the
+headers value; however, when more than one element is to be placed on an Server-ID
+header, then they should be a semicolon-delimited list of elements.
      </t>
 
    </section>
@@ -200,7 +193,7 @@ header, then they should be a comma-delimited list of elements.
      <t>
 The HTTP <xref target="RFC7230">Via</xref> header was introduced to detect loops
 when <xref target="Via-Header">proxies or caches</xref> are used within the HTTP
-path. The proposed X-Server-ID header works independently from that header and
+path. The proposed Server-ID header works independently from that header and
 doesn't change it's usefullness or functionality.
      </t>
 
@@ -208,24 +201,19 @@ doesn't change it's usefullness or functionality.
 
    <section title="Acknowledgements" anchor="Acknowledgements">
      <t>
-This work was propted by the work of the <xref target="Atlas">RIPE Atlas</xref>
+This work was inspired by the work of the <xref target="Atlas">RIPE Atlas</xref>
 project and it's need to indentify HTTP servers when they are Anycast.
 In addition, this work is based on the existing CF- HTTP header used within
 <xref target="CloudFlare">CloudFlare's Anycast CDN deployment</xref>.
      </t>
 
      <t>
-This document is in-part a generalization and specification  of already existing
+This document is in-part a generalization and specification of already existing
 company-specific solutions.
      </t>
    </section>
 
    <section title="IANA Considerations" anchor="IANA">
-
-     <t>
-Because this draft defines an "X-" header, this draft includes no request to IANA. If
-it was a non "X-" header; then the following would apply.
-     </t>
 
     <section title="Header Field Registration" anchor="header.field.registration">
      <t>
@@ -244,11 +232,11 @@ entries shall be updated according to the permanent registrations below (see <xr
    <ttcol>Status</ttcol>
    <ttcol>Reference</ttcol>
 
-   <c>X-Server-ID</c>
+   <c>Server-ID</c>
    <c>http</c>
    <c>standard</c>
    <c>
-      <xref target="x-server-id"/>
+      <xref target="server-id"/>
    </c>
 </texttable>
 
@@ -259,13 +247,8 @@ entries shall be updated according to the permanent registrations below (see <xr
    <section anchor="Security" title="Security Considerations">
      <t>
 This header, by its very nature, exposes the existence of web servers or
-co-location sites or both. Server operators who are concerned abot this
+co-location sites or both. Server operators who are concerned about this
 exposure should not opt in to this feature.
-
-NOTE: technically speaking, the "Server" header could be abused. As of now,
-this should say "Apache 2.2.x" or such, but it could say "Apache 2.2.x @
-LAX-2" as well. I'm arguing that this would be an overload, though it's a
-simple one to tweak...
      </t>
    </section>
 
@@ -302,6 +285,18 @@ simple one to tweak...
   <seriesInfo name="RFC" value="3864"/>
 </reference>
 
+ <reference anchor="RFC5001">
+           <front>
+               <title>DNS Name Server Identifier (NSID) Option</title>
+               <author initials="R." surname="Austein"
+                       fullname="Rob Austein">
+               </author>
+
+               <date month="August" year="2007" />
+           </front>
+           <seriesInfo name="RFC" value="5001" />
+           <seriesInfo name="STD" value="1" />
+ </reference>
 
      <reference anchor="IATA" target="https://en.wikipedia.org/wiki/List_of_airports_by_IATA_code">
        <front>

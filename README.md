@@ -13,6 +13,6 @@ You will need xml2rfc installed.
 
 ## Authors
 
-  Martin J. Levy @ CloudFlare
-  Robert Kisteleki @ RIPE NCC
+* Martin J. Levy @ CloudFlare
+* Robert Kisteleki @ RIPE NCC
 
