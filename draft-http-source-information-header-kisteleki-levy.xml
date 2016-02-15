@@ -118,12 +118,15 @@ filed is determined by the server operator; this document does not specify
 syntactical or semantic constraints. However, operators SHOULD use values
 that can help clients to interpret the value itself, such as geolocation
 codes (UNLOC, <xref target="IATA">IATA codes</xref>, POP identifiers, etc.)
-in combination with some kind of server instance identifiers.</t>
+in combination with some kind of server instance identifiers.
 
 We aren't prpoposing an X-Server-ID header because X- headers are now unused
 according to <xref target="RFC6648">RFC6648</xref>.
+     </t>
 
-<t>The length of the value for this header cannot be more than 4 kilobytes (?)</t>
+     <t>
+The length of the value for this header cannot be more than 4 kilobytes (?)
+     </t>
    </section>
 
    <section title="Examples">
