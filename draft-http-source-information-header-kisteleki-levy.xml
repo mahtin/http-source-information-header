@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="US-ASCII"?>
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
  <!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
+ <!ENTITY RFC4892 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4892.xml">
+ <!ENTITY RFC5001 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5001.xml">
  <!ENTITY RFC6648 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6648.xml">
  <!ENTITY RFC7230 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7230.xml">
 ]>
@@ -57,8 +59,9 @@
      <t>
 This document proposes a new HTTP header field to add an optional identifier
 of the HTTP server generating the response to a user request. Such a header
-could be used to identifier which location or server instance was reached by
-the user, which can be useful in anycast deployments and CDNs.
+could be used to identifier which geographic-location or server-instance is
+being reached by the user. This can be useful in anycast deployments and/or
+CDNs.
      </t>
    </abstract>
  </front>
@@ -81,7 +84,7 @@ from; it can be a useful debugging tool to have that information kept in the HTT
 Normally, lower level protocols can be used (traceroute, ping, etc.) to determine the
 source end point location. For example, DNS servers can use NSID bit
 <xref target="RFC5001"/> to convey this information.
-With this header, the data could be there by default wihin every HTTP transaction.
+With this header, the data could be there by default within every HTTP transaction.
      </t>
 
      <t>
@@ -92,7 +95,7 @@ useful to know the actual source server.
 
      <t>
 The source IP address within an HTTP transaction normally can be mapped to a
-geographic location when Unicast addressesing is used. Anycast services change that
+geographic location when Unicast addressing is used. Anycast services change that
 dynamic.
      </t>
 
@@ -113,14 +116,14 @@ interpreted as described in <xref target="RFC2119">RFC 2119</xref>.
 
     <section title="The Server-ID Header" anchor="server-id">
      <t>
-We propose to add an OPTIONAL HTTP header, Server-ID. The value of such a
-filed is determined by the server operator; this document does not specify
+We propose to add an OPTIONAL HTTP header, Server-ID. The server operator
+determines the value of such a field; this document does not specify
 syntactical or semantic constraints. However, operators SHOULD use values
 that can help clients to interpret the value itself, such as geolocation
 codes (UNLOC, <xref target="IATA">IATA codes</xref>, POP identifiers, etc.)
 in combination with some kind of server instance identifiers.
 
-We aren't prpoposing an X-Server-ID header because X- headers are now unused
+We aren't proposing an X-Server-ID header because X- headers are now unused
 according to <xref target="RFC6648">RFC6648</xref>.
      </t>
 
@@ -141,7 +144,7 @@ used within the Internet for names of sites and links.
 +-----------------------+
 | Server-ID: JFK        |
 +-----------------------+ ]]></artwork>
-        <postamble>An Server-ID header showing the local airport code.</postamble>
+        <postamble>A Server-ID header showing the local airport code.</postamble>
       </figure>
 
      <t>
@@ -154,12 +157,12 @@ location.
 +---------------------------------------+
 | Server-ID: 2334677359553192-SIN       |
 +---------------------------------------+ ]]></artwork>
-        <postamble>An Server-ID header showing company specific informaiton along with locations.</postamble>
+        <postamble>A Server-ID header showing company specific information along with locations.</postamble>
       </figure>
 
      <t>
 The Server-ID header data SHOULD try not to duplicate the work of existing headers.
-For example; not replicating the Powered-By or Server header informaiton.
+For example; not replicating the Powered-By or Server header information.
      </t>
 
    </section>
@@ -168,7 +171,7 @@ For example; not replicating the Powered-By or Server header informaiton.
      <t>
 There needs to be a way to address recursion when HTTP headers and content
 pass thru proxies or caches. As HTTP header names MUST be unique and only
-occure once, any additional server wanting to add content to the Server-ID
+occur once, any additional server wanting to add content to the Server-ID
 header MUST do so in an additive manner.
      </t>
 
@@ -177,7 +180,7 @@ header MUST do so in an additive manner.
 +-----------------------+
 | Server-ID: JFK        |
 +-----------------------+ ]]></artwork>
-        <postamble>An Server-ID header before a proxy or cache.</postamble>
+        <postamble>A Server-ID header before a proxy or cache.</postamble>
       </figure>
 
       <figure align="center" anchor="header-after-recursion">
@@ -185,12 +188,12 @@ header MUST do so in an additive manner.
 +-----------------------+
 | Server-ID: JFK;EWR    |
 +-----------------------+ ]]></artwork>
-        <postamble>An Server-ID header after a proxy or cache.</postamble>
+        <postamble>A Server-ID header after a proxy or cache.</postamble>
       </figure>
 
      <t>
 This document does not specify syntactical or semantic constraints of the
-headers value; however, when more than one element is to be placed on an Server-ID
+headers value; however, when more than one element is to be placed on a Server-ID
 header, then they should be a semicolon-delimited list of elements.
      </t>
 
@@ -201,7 +204,7 @@ header, then they should be a semicolon-delimited list of elements.
 The HTTP <xref target="RFC7230">Via</xref> header was introduced to detect loops
 when <xref target="Via-Header">proxies or caches</xref> are used within the HTTP
 path. The proposed Server-ID header works independently from that header and
-doesn't change it's usefullness or functionality.
+doesn't change its usefulness or functionality.
      </t>
 
    </section>
@@ -209,14 +212,14 @@ doesn't change it's usefullness or functionality.
    <section title="Acknowledgements" anchor="Acknowledgements">
      <t>
 This work was inspired by the work of the <xref target="Atlas">RIPE Atlas</xref>
-project and it's need to indentify HTTP servers when they are Anycast.
+project and RIPEs need to indentify HTTP servers when they are Anycast.
 In addition, this work is based on the existing CF- HTTP header used within
 <xref target="CloudFlare">CloudFlare's Anycast CDN deployment</xref>.
      </t>
 
      <t>
 This document is in-part a generalization and specification of already existing
-company-specific solutions.
+company-specific solutions implemented by CloudFlare.
      </t>
    </section>
 
@@ -255,7 +258,7 @@ entries shall be updated according to the permanent registrations below (see <xr
 
    </section>
 
-   <section anchor="Security" title="Security Considerations">
+   <section title="Security Considerations" anchor="Security">
      <t>
 This header, by its very nature, exposes the existence of web servers or
 co-location sites or both. Server operators who are concerned about this
@@ -269,6 +272,8 @@ exposure should not opt in to this feature.
    <references title="Normative References">
      <!--?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml"?-->
      &RFC2119;
+     &RFC4892;
+     &RFC5001;
      &RFC6648;
      &RFC7230;
 
@@ -276,39 +281,26 @@ exposure should not opt in to this feature.
 
    <references title="Informative References">
 
-<reference anchor="BCP90">
-  <front>
-    <title>Registration Procedures for Message Header Fields</title>
-    <author initials="G." surname="Klyne" fullname="G. Klyne">
-      <organization>Nine by Nine</organization>
-      <address><email>GK-IETF@ninebynine.org</email></address>
-    </author>
-    <author initials="M." surname="Nottingham" fullname="M. Nottingham">
-      <organization>BEA Systems</organization>
-      <address><email>mnot@pobox.com</email></address>
-    </author>
-    <author initials="J." surname="Mogul" fullname="J. Mogul">
-      <organization>HP Labs</organization>
-      <address><email>JeffMogul@acm.org</email></address>
-    </author>
-    <date year="2004" month="September"/>
-  </front>
-  <seriesInfo name="BCP" value="90"/>
-  <seriesInfo name="RFC" value="3864"/>
-</reference>
-
- <reference anchor="RFC5001">
-           <front>
-               <title>DNS Name Server Identifier (NSID) Option</title>
-               <author initials="R." surname="Austein"
-                       fullname="Rob Austein">
-               </author>
-
-               <date month="August" year="2007" />
-           </front>
-           <seriesInfo name="RFC" value="5001" />
-           <seriesInfo name="STD" value="1" />
- </reference>
+     <reference anchor="BCP90">
+       <front>
+         <title>Registration Procedures for Message Header Fields</title>
+         <author initials="G." surname="Klyne" fullname="G. Klyne">
+           <organization>Nine by Nine</organization>
+           <address><email>GK-IETF@ninebynine.org</email></address>
+         </author>
+         <author initials="M." surname="Nottingham" fullname="M. Nottingham">
+           <organization>BEA Systems</organization>
+           <address><email>mnot@pobox.com</email></address>
+         </author>
+         <author initials="J." surname="Mogul" fullname="J. Mogul">
+           <organization>HP Labs</organization>
+           <address><email>JeffMogul@acm.org</email></address>
+         </author>
+         <date year="2004" month="September"/>
+       </front>
+       <seriesInfo name="BCP" value="90"/>
+       <seriesInfo name="RFC" value="3864"/>
+     </reference>
 
      <reference anchor="IATA" target="https://en.wikipedia.org/wiki/List_of_airports_by_IATA_code">
        <front>
@@ -352,13 +344,69 @@ exposure should not opt in to this feature.
 
    </references>
 
-   <section anchor="app-additional" title="Additional Stuff">
-     <t>This becomes an Appendix.</t>
+   <section title="Additional Stuff" anchor="app-additional">
+
+     <t>
+There are existing implementations of similar functionality. They are listed here.
+     </t>
+
+     <t>
+CloudFlare has implemented a company-specific CF-RAY header to partially provide this functionality.
+It has also provided a specific URL to provide additional data.
+     </t>
+
+      <figure>
+        <artwork><![CDATA[
+$ curl -D - https://cloudflare.com/
+HTTP/1.1 302 Moved Temporarily
+Server: cloudflare-nginx
+...
+Location: https://www.cloudflare.com/
+CF-RAY: 27526e1305df3476-LHR
+
+$ ]]></artwork>
+        <postamble>The CF-RAY header in a real HTTP transaction</postamble>
+      </figure>
+
+     <t>
+CloudFlare has implemented a company-specific URL to partially provide this functionality
+     </t>
+
+      <figure>
+        <artwork><![CDATA[
+$ curl https://cloudflare.com/cdn-cgi/trace
+fl=21f76
+h=cloudflare.com
+ip=2a01:40:5459:1001:404c:a251:6afa:b498
+ts=1455554871.885
+visit_scheme=https
+uag=Mozilla/5.0 (iPad; U; CPU OS 3_2_1 like Mac OS X; en-us) ...
+colo=LHR
+spdy=off
+loc=GB
+$ ]]></artwork>
+        <postamble>The cdn-cgi/trace URL</postamble>
+      </figure>
+
+     <t>
+DNS Name servers provide a similar feature via a specific <xref target="RFC4892">CHAOS</xref> DNS query.
+     </t>
+
+      <figure>
+        <artwork><![CDATA[
+$ dig +short CHAOS TXT 'ID.SERVER' @k.root-servers.net
+"ns1.gb-lon.k.ripe.net"
+$ ]]></artwork>
+        <postamble>A DNS query</postamble>
+      </figure>
+
    </section>
 
    <!-- Change Log
 v00 2016-02-07  RK    Initial text
 v01 2016-02-14  MJL   Initial xml draft version
+v01 2016-02-15  RK    Initial edits
+v01 2016-02-15  MJL   More stuff
     -->
 
  </back>
