@@ -128,7 +128,9 @@ that can help clients to interpret the value itself, such as geolocation
 codes (<xref target="UNLOC">UNLOC</xref>, <xref target="IATA">IATA codes</xref>,
 POP or datacenter identifiers, server-specific instance opaque tag, etc.)
 or some combination of these.
+     </t>
 
+     <t>
 We aren't proposing an X-Server-ID header because X- headers are now depricated
 according to <xref target="RFC6648">RFC6648</xref>.
      </t>
