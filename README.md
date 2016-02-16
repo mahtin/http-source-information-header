@@ -1,5 +1,17 @@
 # http-source-information-header
 
+## A Draft IETF RFC
+
+* draft-http-source-information-header-kisteleki-levy
+
+This document proposes a new optional HTTP header field to provide an identifier
+of the HTTP server generating the response to a user request. Such a header
+could be used to identify which geographic-location or server-instance is
+being reached by the user. This can be useful in anycast deployments and/or
+CDNs.
+
+`Server-ID: JFK`
+
 ## building txt and html files
 
 This is done with the Makefile.
