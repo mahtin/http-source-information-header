@@ -57,9 +57,9 @@
 
    <abstract>
      <t>
-This document proposes a new HTTP header field to add an optional identifier
+This document proposes a new optional HTTP header field to provide an identifier
 of the HTTP server generating the response to a user request. Such a header
-could be used to identifier which geographic-location or server-instance is
+could be used to identify which geographic-location or server-instance is
 being reached by the user. This can be useful in anycast deployments and/or
 CDNs.
      </t>
@@ -72,36 +72,41 @@ CDNs.
 
      <t>
 We propose to add an OPTIONAL HTTP header, Server-ID. The value of such a
-filed can be used to identify which location or server instance was reached by
-the user, which can be useful in anycast deployments and CDNs. The exact 
-syntax for the value if this field is determined by the server operator;
-this document does not specify syntactical or semantic constraints.
+field can be used to identify which location or server-instance was reached by
+the user. This can be useful in anycast deployments and/or CDNs. The exact 
+syntax for the value of this field is determined by the server operator;
+this document does not overly specify syntactical or semantic constraints.
      </t>
 
      <t>
 While it's not normally important to know where HTTP data is being delivered
-from; it can be a useful debugging tool to have that information kept in the HTTP header.
+from; it can be a useful debugging tool to have that information provided in the HTTP header.
 Normally, lower level protocols can be used (traceroute, ping, etc.) to determine the
 source end point location. For example, DNS servers can use NSID bit
 <xref target="RFC5001"/> to convey this information.
-With this header, the data could be there by default within every HTTP transaction.
+With this header, the information could be there by default within every HTTP transaction.
      </t>
 
      <t>
 Front-end load-balancers can also mask the specific server delivering data. This
-is sometimes the desired operational mode. In some cases, for debugging reasons, it's
+is sometimes the desired operational mode. In some cases, maybe for debugging reasons, it's
 useful to know the actual source server.
      </t>
 
      <t>
 The source IP address within an HTTP transaction normally can be mapped to a
 geographic location when Unicast addressing is used. Anycast services change that
-dynamic.
+dramatically.
      </t>
 
      <t>
 As more and more web services are delivered from Anycast servers; it becomes
 harder to know which physical location information is being delivered from.
+     </t>
+
+     <t>
+This information could be placed within the body of the transfered data; however,
+that makes automation of logging this data much harder.
      </t>
 
      <section title="Requirements Language">
@@ -121,16 +126,23 @@ determines the value of such a field; this document does not specify
 syntactical or semantic constraints. However, operators SHOULD use values
 that can help clients to interpret the value itself, such as geolocation
 codes (<xref target="UNLOC">UNLOC</xref>, <xref target="IATA">IATA codes</xref>,
-POP identifiers, server-specific instance opaque tag, etc.) or some combination
-of these.
+POP or datacenter identifiers, server-specific instance opaque tag, etc.)
+or some combination of these.
 
-We aren't proposing an X-Server-ID header because X- headers are now unused
+We aren't proposing an X-Server-ID header because X- headers are now depricated
 according to <xref target="RFC6648">RFC6648</xref>.
      </t>
 
      <t>
-The length of the value for this header cannot be more than 4 kilobytes (?)
+The length of the value for this header cannot be more than 4 kilobytes (-- need reference --)
      </t>
+
+     <t>
+As multipul servers are sometimes in the path of data (CDN's etc), there needs to be
+some limit on the values of data in this header. If the data is comma-separated, then
+commas are not allowed within the data.
+     </t>
+
    </section>
 
    <section title="Examples">
@@ -162,7 +174,7 @@ location.
       </figure>
 
      <t>
-The Server-ID header data SHOULD try not to duplicate the work of existing headers.
+The Server-ID header data SHOULD NOT try to duplicate the work of existing headers.
 For example; not replicating the Powered-By or Server header information.
      </t>
 
@@ -205,7 +217,7 @@ header, then they should be a semicolon-delimited list of elements.
 The HTTP <xref target="RFC7230">Via</xref> header was introduced to detect loops
 when <xref target="Via-Header">proxies or caches</xref> are used within the HTTP
 path. The proposed Server-ID header works independently from that header and
-doesn't change its usefulness or functionality.
+doesn't change Via's usefulness or functionality.
      </t>
 
    </section>
@@ -213,14 +225,15 @@ doesn't change its usefulness or functionality.
    <section title="Acknowledgements" anchor="Acknowledgements">
      <t>
 This work was inspired by the work of the <xref target="Atlas">RIPE Atlas</xref>
-project and RIPEs need to indentify HTTP servers when they are Anycast.
-In addition, this work is based on the existing CF- HTTP header used within
+project and RIPEs need to indentify HTTP servers when they are operating on an Anycast address.
+In addition, this work is based on the existing CF-RAY HTTP header used within
 <xref target="CloudFlare">CloudFlare's Anycast CDN deployment</xref>.
      </t>
 
      <t>
 This document is in-part a generalization and specification of already existing
-company-specific solutions implemented by CloudFlare.
+company-specific solutions implemented and operated by CloudFlare. Other similar
+solutions exist globally.
      </t>
    </section>
 
@@ -263,7 +276,8 @@ entries shall be updated according to the permanent registrations below (see <xr
      <t>
 This header, by its very nature, exposes the existence of web servers or
 co-location sites or both. Server operators who are concerned about this
-exposure should not opt in to this feature.
+exposure should not opt in to this feature or carefully consider the information
+this publish.
      </t>
    </section>
 
@@ -355,15 +369,15 @@ exposure should not opt in to this feature.
 
    </references>
 
-   <section title="Additional Stuff" anchor="app-additional">
+   <section title="Existing Implementations" anchor="existing-implementations">
 
      <t>
-There are existing implementations of similar functionality. They are listed here.
+There are existing implementations with similar functionality. They are described here.
      </t>
 
      <t>
 CloudFlare has implemented a company-specific CF-RAY header to partially provide this functionality.
-It has also provided a specific URL to provide additional data.
+It has also provided a specific URL to provide additional data outside of the HTTP header..
      </t>
 
       <figure>
@@ -418,6 +432,7 @@ v00 2016-02-07  RK    Initial text
 v01 2016-02-14  MJL   Initial xml draft version
 v01 2016-02-15  RK    Initial edits
 v01 2016-02-15  MJL   More stuff
+v01 2016-02-16  MJL   Fixed spelling and added more text
     -->
 
  </back>
