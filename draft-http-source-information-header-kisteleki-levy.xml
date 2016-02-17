@@ -3,7 +3,6 @@
  <!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
  <!ENTITY RFC4892 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4892.xml">
  <!ENTITY RFC5001 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5001.xml">
- <!ENTITY RFC6648 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6648.xml">
  <!ENTITY RFC7230 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7230.xml">
 ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
@@ -291,7 +290,6 @@ this publish.
      &RFC2119;
      &RFC4892;
      &RFC5001;
-     &RFC6648;
      &RFC7230;
 
    </references>
