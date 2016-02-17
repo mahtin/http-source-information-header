@@ -14,5 +14,8 @@ rfc_draft=draft-levy-httpbis-source-information-header
 
 all: $(rfc_draft).html $(rfc_draft).txt
 
+clean:
+	rm -f $(rfc_draft).html $(rfc_draft).txt
+
 references:
 	mkdir references
