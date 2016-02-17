@@ -137,12 +137,8 @@ more than 64 bytes. -->
      </t>
 
      <t>
-We aren't proposing an X-Server-ID header because X- headers are now depricated
-according to <xref target="RFC6648">RFC6648</xref>.
-     </t>
-
-     <t>
-The length of the value for this header cannot be more than 4 kilobytes (-- need reference --)
+The maximum length of this header (or any header) is handed in Section 2.5.
+(Conformance and Error Handling) of <xref target="RFC7230">RFC7230</xref>.
      </t>
 
      <t>
@@ -207,7 +203,7 @@ header MUST do so in an additive manner. <!-- Olafur: What order ?? -->
       <figure align="center" anchor="header-after-recursion">
         <artwork align="left"><![CDATA[
 +-----------------------+
-| Server-ID: JFK;EWR    |
+| Server-ID: JFK,EWR    |
 +-----------------------+ ]]></artwork>
         <postamble>A Server-ID header after a proxy or cache.</postamble>
       </figure>
@@ -215,7 +211,7 @@ header MUST do so in an additive manner. <!-- Olafur: What order ?? -->
      <t>
 This document does not specify syntactical or semantic constraints of the
 headers value; however, when more than one element is to be placed on a Server-ID
-header, this is a semicolon-delimited list of elements.
+header, this is a comma-delimited list of elements.
      </t>
 
    </section>
