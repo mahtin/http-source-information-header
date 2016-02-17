@@ -14,7 +14,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-http-source-information-header-kisteleki-levy-01" ipr="trust200902">
+<rfc category="std" docName="draft-levy-httpbis-source-information-header-00" ipr="trust200902">
  <front>
    <title abbrev="HTTP Server-ID">HTTP Server-ID header for determining specific anycast instance</title>
 
@@ -49,17 +49,17 @@
 
    <date year="2016" />
 
-   <area>General</area>
+   <area>Applications</area>
 
    <workgroup>Internet Engineering Task Force</workgroup>
 
-   <keyword>HTTP Header</keyword>
+   <keyword>HTTP Header, Anycast</keyword>
 
    <abstract>
      <t>
 This document proposes a new optional HTTP header field to provide an identifier
 of the HTTP server generating the response to a user request. Such a header
-could be used to identify which geographic-location or server-instance is
+can be used to identify which geographic-location or server-instance is
 being reached by the user. This can be useful in anycast deployments and/or
 CDNs.
      </t>
@@ -73,7 +73,8 @@ CDNs.
      <t>
 We propose to add an OPTIONAL HTTP header, Server-ID. The value of such a
 field can be used to identify which location or server-instance was reached by
-the user. This can be useful in anycast deployments and/or CDNs. The exact 
+the user. This can be useful in anycast deployments, wide spread CDNs
+and for any service provided in multiple locaitons. The exact
 syntax for the value of this field is determined by the server operator;
 this document does not overly specify syntactical or semantic constraints.
      </t>
@@ -84,19 +85,23 @@ from; it can be a useful debugging tool to have that information provided in the
 Normally, lower level protocols can be used (traceroute, ping, etc.) to determine the
 source end point location. For example, DNS servers can use NSID bit
 <xref target="RFC5001"/> to convey this information.
-With this header, the information could be there by default within every HTTP transaction.
+With Server-ID header, the information can be included by default
+within every HTTP transaction.
      </t>
 
      <t>
-Front-end load-balancers can also mask the specific server delivering data. This
+Front-end load-balancers frequently mask the specific server delivering data. This
 is sometimes the desired operational mode. In some cases, maybe for debugging reasons, it's
-useful to know the actual source server.
+useful to know the actual source server. In some cases two
+transactions from the same client will go to different servers
+possibly yielding different results, Server-ID enables detecting which
+server instance yieled each answer.
      </t>
 
      <t>
 The source IP address within an HTTP transaction normally can be mapped to a
 geographic location when Unicast addressing is used. Anycast services change that
-dramatically.
+dramatically.  <!-- Olafur: mention address buying/selling ?? -->
      </t>
 
      <t>
@@ -105,7 +110,7 @@ harder to know which physical location information is being delivered from.
      </t>
 
      <t>
-This information could be placed within the body of the transfered data; however,
+This information might be placed within the body of the transfered data; however,
 that makes automation of logging this data much harder.
      </t>
 
@@ -127,7 +132,8 @@ syntactical or semantic constraints. However, operators SHOULD use values
 that can help clients to interpret the value itself, such as geolocation
 codes (<xref target="UNLOC">UNLOC</xref>, <xref target="IATA">IATA codes</xref>,
 POP or datacenter identifiers, server-specific instance opaque tag, etc.)
-or some combination of these.
+or some combination of these. <!-- Olafur: The length of the value SHOULD not be
+more than 64 bytes. -->
      </t>
 
      <t>
@@ -187,7 +193,7 @@ For example; not replicating the Powered-By or Server header information.
 There needs to be a way to address recursion when HTTP headers and content
 pass thru proxies or caches. As HTTP header names MUST be unique and only
 occur once, any additional server wanting to add content to the Server-ID
-header MUST do so in an additive manner.
+header MUST do so in an additive manner. <!-- Olafur: What order ?? -->
      </t>
 
       <figure align="center" anchor="header-before-recursion">
@@ -209,7 +215,7 @@ header MUST do so in an additive manner.
      <t>
 This document does not specify syntactical or semantic constraints of the
 headers value; however, when more than one element is to be placed on a Server-ID
-header, then they should be a semicolon-delimited list of elements.
+header, this is a semicolon-delimited list of elements.
      </t>
 
    </section>
@@ -242,10 +248,10 @@ solutions exist globally.
    <section title="IANA Considerations" anchor="IANA">
 
      <t>
-Because this draft defines a new header, this document includes a request to IANA.
+Because this draft defines a new header, this document includes a
+request to IANA.
      </t>
 
-    <section title="Header Field Registration" anchor="header.field.registration">
      <t>
 HTTP header fields are registered within the Message Header Field Registry
 maintained at <eref target="http://www.iana.org/assignments/message-headers/"/>.
@@ -253,7 +259,7 @@ maintained at <eref target="http://www.iana.org/assignments/message-headers/"/>.
 
      <t>
 This document defines the following HTTP header fields, so their associated registry
-entries shall be updated according to the permanent registrations below (see <xref target="BCP90"/>):
+entries will be updated according to the permanent registrations below (see <xref target="BCP90"/>):
      </t>
 
 <texttable align="left" suppress-title="true" anchor="iana.header.registration.table">
@@ -272,13 +278,11 @@ entries shall be updated according to the permanent registrations below (see <xr
 
    </section>
 
-   </section>
-
    <section title="Security Considerations" anchor="Security">
      <t>
 This header, by its very nature, exposes the existence of web servers or
 co-location sites or both. Server operators who are concerned about this
-exposure should not opt in to this feature or carefully consider the information
+exposure SHOULD not opt in to this feature or carefully consider the information
 this publish.
      </t>
    </section>
@@ -427,6 +431,19 @@ $ ]]></artwork>
         <postamble>A DNS query</postamble>
       </figure>
 
+<t>
+A more modern way to query DNS servers for their ID is to use NSID
+option
+    <figure>
+        <artwork><![CDATA[
+$ dig +short +nsid . ns @k.root-servers.net | grep NSID
+;NSID: 6e 73 32 2e 75 73 2d 6d 69 61 2e 6b 2e 72 69 70 65 2e 6e 65 74
+              ("ns2.us-mia.k.ripe.net")
+$ ]]></artwork>
+     <postamble> DNS NSID example</postamble>
+     </figure>
+</t>
+
    </section>
 
    <!-- Change Log
@@ -435,6 +452,7 @@ v01 2016-02-14  MJL   Initial xml draft version
 v01 2016-02-15  RK    Initial edits
 v01 2016-02-15  MJL   More stuff
 v01 2016-02-16  MJL   Fixed spelling and added more text
+v01 2016-02-17  MJL   Added edits from Olafur
     -->
 
  </back>
