@@ -13,7 +13,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-levy-httpbis-source-information-header-00" ipr="trust200902">
+<rfc category="std" docName="draft-kisteleki-httpbis-source-information-header-00" ipr="trust200902">
  <front>
    <title abbrev="HTTP Server-ID">HTTP Server-ID header for determining specific anycast instance</title>
 
@@ -447,6 +447,7 @@ v01 2016-02-15  RK    Initial edits
 v01 2016-02-15  MJL   More stuff
 v01 2016-02-16  MJL   Fixed spelling and added more text
 v01 2016-02-17  MJL   Added edits from Olafur
+v01 2016-03-17  MJL   Changed name and author
     -->
 
  </back>

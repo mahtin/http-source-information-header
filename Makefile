@@ -3,7 +3,7 @@ xml2rfc=xml2rfc
 
 no_network=-N
 
-rfc_draft=draft-levy-httpbis-source-information-header
+rfc_draft=draft-kisteleki-httpbis-source-information-header
 
 %.txt: %.xml
 	export XML_LIBRARY=references; $(xml2rfc) $(no_network) --text $< $@
