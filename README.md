@@ -2,7 +2,7 @@
 
 ## A Draft IETF RFC
 
-* draft-levy-httpbis-source-information-header
+* draft-kisteleki-httpbis-source-information-header
 
 This document proposes a new optional HTTP header field to provide an identifier
 of the HTTP server generating the response to a user request. Such a header
@@ -20,8 +20,8 @@ CDNs.
 
 This is done with the Makefile.
 
-* xml2rfc -N --text draft-levy-httpbis-source-information-header.xml
-* xml2rfc -N --html draft-levy-httpbis-source-information-header.xml
+* xml2rfc -N --text draft-kisteleki-httpbis-source-information-header.xml
+* xml2rfc -N --html draft-kisteleki-httpbis-source-information-header.xml
 
 You will need xml2rfc installed.
 
@@ -29,6 +29,6 @@ You will need xml2rfc installed.
 
 ## Authors
 
-* Martin J. Levy @ CloudFlare
 * Robert Kisteleki @ RIPE NCC
+* Martin J. Levy @ CloudFlare
 
